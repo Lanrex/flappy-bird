@@ -1,9 +1,23 @@
+Surface = famous.core.Surface;
+Modifier = famous.core.Modifier;
+Transform = famous.core.Transform;
+
 Bird = {
-  position : 10,
-  move : function(){
-    position += 10;
-  },
-  print : function(){
-    console.log(position);
+
+  Surf : new Surface({
+    properties : {
+      backgroundColor : 'blue'
+    }
+  }),
+
+  Mod : new Modifier({
+    size: [100,100],
+    transform : function(){
+      return Transform.translate(50,50);
+    }
+  }),
+
+  add : function(){
+    mainCtx.add(this.Mod).add(this.Surf);
   }
 };

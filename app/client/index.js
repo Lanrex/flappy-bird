@@ -1,4 +1,9 @@
+Engine = famous.core.Engine;
+
 // Starting point of the app
 Meteor.startup(function(){
-  var bird = new Bird();
+
+  mainCtx = Engine.createContext();
+
+  Bird.add();
 });
