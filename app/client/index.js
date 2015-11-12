@@ -1,23 +1,57 @@
-if (Meteor.isClient) {
-  // counter starts at 0
-  Session.setDefault('counter', 0);
+"use strict";
 
-  Template.hello.helpers({
-    counter: function () {
-      return Session.get('counter');
-    }
-  });
+var mainCtx, bird1;
 
-  Template.hello.events({
-    'click button': function () {
-      // increment the counter when button is clicked
-      Session.set('counter', Session.get('counter') + 1);
-    }
-  });
+var Engine, Surface, Modifier, Transform;
+
+class Bird{
+  constructor(){
+    this.Surf = new Surface({
+      properties : {
+        backgroundColor : 'blue'
+      }
+    });
+
+    this.Mod = new Modifier({
+      size : [100,100],
+      opacity : 0,
+      transform : function(){
+        return Transform.translate(50,50);
+      }
+    });
+
+    mainCtx.add(this.Mod).add(this.Surf);
+  }
+
+  show(){
+    this.Mod.setOpacity(1);
+  }
+
+  hide(){
+    this.Mod.setOpacity(0);
+  }
 }
 
-if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
-  });
+Meteor.startup(function(){
+  console.log('startup');
+  init();
+});
+
+function init(){
+  console.log('init');
+  famous.core.famous;
+  Engine = famous.core.Engine;
+  Surface = famous.core.Surface;
+  Modifier = famous.core.Modifier;
+  Transform = famous.core.Transform;
+
+  run();
+}
+
+function run(){
+  console.log('run');
+  mainCtx = Engine.createContext();
+
+  bird1 = new Bird();
+  bird1.show();
 }
