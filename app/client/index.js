@@ -19,6 +19,7 @@ var
   // Surfaces i modifiers
   gameView,
   gameViewModifier,
+  interphase,
   clickSurface,
   clickSurfaceModifier,
   backgroundSurface,
@@ -432,6 +433,32 @@ function Msg(){
   }
 }
 
+function interphaseObj(){
+
+    var Surf = new ImageSurface({
+      content: 'img/score.png',
+      properties: {
+        zIndex: 40
+      }
+    });
+    var Mod = new StateModifier({
+      opacity: 1,
+      origin: [0.5,0.5],
+      size: [226,116],
+      transform: Transform.translate(320,300,40)
+    });
+
+    gameView.add(Mod).add(Surf);
+
+    this.show = function(){
+      Mod.setOpacity(1);
+    }
+
+    this.hide = function(){
+      Mod.setOpacity(0);
+    }
+}
+
 /////////////
 // I N I T //
 /////////////
@@ -567,18 +594,6 @@ function newVars(){
   // Add msg
   msg = new Msg();
 
-  multiStatsMod = new StateModifier({
-    opacity: 0,
-    size: [640,undefined],
-    transform: Transform.translate(0,860,40)
-  });
-
-  soloStatsMod = new StateModifier({
-    opacity: 0,
-    size: [640,undefined],
-    transform: Transform.translate(0,860,40)
-  });
-
   // Physics Engine
   // Nou objecte tipus PhysicsEngine
   physicsEngine = new PhysicsEngine();
@@ -596,6 +611,8 @@ function newVars(){
   // score
   score = new Score();
 
+  interphase = new interphaseObj();
+
   // Crea bird
   myBird = new Bird();
 }
@@ -603,7 +620,7 @@ function newVars(){
 function init(){
   // subs
 
-  gameView.add(backgroundSurface);
+  // gameView.add(backgroundSurface);
   gameView.add(backgroundRightSurfaceModifier).add(backgroundRightSurface);
   gameView.add(backgroundLeftSurfaceModifier).add(backgroundLeftSurface);
   gameView.add(floorSurfaceModifier).add(floorSurface);
