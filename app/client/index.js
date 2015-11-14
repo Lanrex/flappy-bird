@@ -519,6 +519,21 @@ function interphaseObj(){
     transform: Transform.translate(480-52,326,50)
   });
 
+  // New
+  var newSurf = new ImageSurface({
+    content: 'img/new.png',
+    properties : {
+      zIndex: 50
+    }
+  });
+
+  var newMod = new StateModifier({
+    opacity: 0,
+    size: [64,28],
+    origin: [0,0],
+    transform: Transform.translate(352,372,50)
+  });
+
   // BEST
   var best = [];
   var bestMod = [];
@@ -564,6 +579,7 @@ function interphaseObj(){
 
   gameView.add(MedalMod).add(medalRotationModifier).add(Medal);
   gameView.add(Mod).add(Surf);
+  gameView.add(newMod).add(newSurf);
   gameView.add(scoreMod[0]).add(score[0]);
   gameView.add(scoreMod[1]).add(score[1]);
   gameView.add(scoreMod[2]).add(score[2]);
@@ -571,7 +587,7 @@ function interphaseObj(){
   gameView.add(bestMod[1]).add(best[1]);
   gameView.add(bestMod[2]).add(best[2]);
 
-  this.show = function(scoreNumber,bestNumber){
+  this.show = function(scoreNumber){
 
     // SCORE
     score[0].setContent('img/numbers/szero.png');
@@ -618,6 +634,15 @@ function interphaseObj(){
     best[0].setContent('img/numbers/szero.png');
     best[1].setContent('img/numbers/szero.png');
     best[2].setContent('img/numbers/szero.png');
+    var bestNumber = topScore.findOne().number;
+
+    var newFlag = false;
+    if (scoreNumber   > bestNumber){
+      bestNumber = scoreNumber;
+      //console.log('record!');
+      newFlag = true;
+    }
+
     var str2 = bestNumber.toString();
     for (var j = 0; j < str2.length; j++ ){
       //console.log('str[' + j + ']=' + str2[j]);
@@ -674,6 +699,9 @@ function interphaseObj(){
 
     // SHOW
     Timer.setTimeout(function(){
+      if (newFlag){
+        newMod.setOpacity(1, {duration:1000});
+      }
       Mod.setOpacity(1, {duration : 1000});
       scoreMod[0].setOpacity(1, {duration : 1000});
       scoreMod[1].setOpacity(1, {duration : 1000});
@@ -691,10 +719,11 @@ function interphaseObj(){
         medalRotation.set(0, {duration : 300, curve : Easing.inSine});
         medalRotation.set(1, {duration : 300, curve : Easing.outSine});
       }
-    }, 2000);
+    }, 1800);
   }
 
   this.hide = function(){
+    newMod.setOpacity(0, {duration:250});
     Mod.setOpacity(0, {duration : 250});
     scoreMod[0].setOpacity(0, {duration : 250});
     scoreMod[1].setOpacity(0, {duration : 250});
@@ -866,6 +895,7 @@ function newVars(){
 
 function init(){
   // subs
+  Meteor.subscribe('topScore');
 
   gameView.add(backgroundSurface);
   gameView.add(backgroundRightSurfaceModifier).add(backgroundRightSurface);
@@ -935,7 +965,7 @@ function init(){
 // F U N C I O N S //
 /////////////////////
 
-function lose(type){
+function lose(){
 
   // Es paren les columnes
   for (var i = 0; i < colSets; i++){
@@ -953,12 +983,16 @@ function lose(type){
   // Local
   myBird.lose();
 
-  interphase.show(score.getScore(), 666);
+  // Method
+  Meteor.call('lose',score.getScore());
+
+  //
+  interphase.show(score.getScore());
 
   Timer.setTimeout(function(){
     interphaseFunc();
     myBird.interPhase();
-  }, 2500);
+  }, 4000);
 }
 
 function interphaseFunc(){
@@ -983,7 +1017,12 @@ function collisionFunction(){
 
 }
 
+var secretCode = 0;
+
 function pressSpace(){
+
+  secretCode = 0;
+
   switch (myBird.getPhase()){
       case 'ready':
         // Local
@@ -1029,11 +1068,45 @@ function launch(){
 }
 
 function press1(){
-
+  switch (secretCode){
+    case 0:
+      secretCode = 1;
+      break;
+    case 3:
+      secretCode = 4;
+      break;
+    case 5:
+      secretCode = 6;
+      break;
+    case 6:
+      secretCode = 7;
+      break;
+    default:
+      secretCode = 0;
+      break;
+  }
 }
 
 function press2(){
-
+  switch (secretCode){
+    case 1:
+      secretCode = 2;
+      break;
+    case 2:
+      secretCode = 3;
+      break;
+    case 4:
+      secretCode = 5;
+      break;
+    case 7:
+      secretCode = 8;
+      console.log('Secret code activated\n--Reset top score--');
+      Meteor.call('reset');
+      break;
+    default:
+      secretCode = 0;
+      break;
+  }
 }
 
 function press3(){

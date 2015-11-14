@@ -1,11 +1,21 @@
 Meteor.startup(function(){
   console.log('Server startup');
 
-  Meteor.publish('ranking', function(){
-    return ranking.find();
+  Meteor.publish('topScore', function(){
+    return topScore.find();
   });
+});
 
-  Meteor.publish('statistics', function(){
-    return statistics.find();
-  });
+Meteor.methods({
+  lose : function(score){
+    if (score > topScore.findOne().number){
+      console.log('New top score: ' + score);
+      topScore.update(topScore.findOne(), { $set : { 'number' : score } });
+    }
+  },
+
+  reset : function(){
+    console.log('Reset topScore (0)');
+    topScore.update(topScore.findOne(), { $set : { 'number' : 0 } });
+  }
 });
