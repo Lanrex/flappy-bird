@@ -168,7 +168,7 @@ function Bird(){
       gravityID = physicsEngine.attach(gravity,Part);
     }
     Part.setVelocity(birdFlap);
-    rotation.set(-Math.PI/3);
+    rotation.set(-Math.PI/4);
     rotation.set(Math.PI/5, {duration : 500, curve: Easing.inQuart});
   };
 
@@ -190,7 +190,7 @@ function Bird(){
       gravityID = physicsEngine.attach(gravity,Part);
     }
     Part.setVelocity(birdFlap);
-    rotation.set(-Math.PI/3);
+    rotation.set(-Math.PI/4);
     rotation.set(Math.PI/5, {duration : 500, curve: Easing.inQuart});
     phase = 'game';
   };
@@ -435,28 +435,275 @@ function Msg(){
 
 function interphaseObj(){
 
-    var Surf = new ImageSurface({
-      content: 'img/score.png',
-      properties: {
-        zIndex: 40
+  // SURF
+
+  var Surf = new ImageSurface({
+    content: 'img/score.png',
+    properties: {
+      zIndex: 40
+    }
+  });
+
+  var Mod = new StateModifier({
+    opacity: 0,
+    origin: [0.5,0.5],
+    size: [226*2,116*2],
+    transform: Transform.translate(320,370,40)
+  });
+
+  // MEDAL
+
+  var Medal = new ImageSurface({
+    content: 'img/bronze.png',
+    properties: {
+      zIndex: 50
+    }
+  });
+
+  var medalRotation = new Transitionable(0);
+
+  var medalRotationModifier = new Modifier({
+    origin: [0.5,0.5],
+    align: [0.5,0.5],
+    transform: function(){
+      return Transform.scale(medalRotation.get(),1);
+    }
+  });
+
+  var MedalMod = new StateModifier({
+    opacity: 0,
+    origin: [0,0],
+    size: [88,88],
+    transform: Transform.translate(146, 340, 50)
+  });
+
+  // SCORE
+
+  var score = [];
+  var scoreMod = [];
+
+  score[0] = new ImageSurface({
+    content : 'img/numbers/szero.png',
+    properties: {
+      zIndex: 50
+    }
+  });
+  scoreMod[0] = new StateModifier({
+    opacity: 0,
+    size: [24,28],
+    origin: [0,0],
+    transform: Transform.translate(480,326,50)
+  });
+  score[1] = new ImageSurface({
+    content : 'img/numbers/szero.png',
+    properties: {
+      zIndex: 50
+    }
+  });
+  scoreMod[1] = new StateModifier({
+    opacity: 0,
+    size: [24,28],
+    origin: [0,0],
+    transform: Transform.translate(480-26,326,50)
+  });
+  score[2] = new ImageSurface({
+    content : 'img/numbers/szero.png',
+    properties: {
+      zIndex: 50
+    }
+  });
+  scoreMod[2] = new StateModifier({
+    opacity: 0,
+    size: [24,28],
+    origin: [0,0],
+    transform: Transform.translate(480-52,326,50)
+  });
+
+  // BEST
+  var best = [];
+  var bestMod = [];
+
+  best[0] = new ImageSurface({
+    content : 'img/numbers/szero.png',
+    properties: {
+      zIndex: 50
+    }
+  });
+  bestMod[0] = new StateModifier({
+    opacity: 0,
+    size: [24,28],
+    origin: [0,0],
+    transform: Transform.translate(480,408,50)
+  });
+  best[1] = new ImageSurface({
+    content : 'img/numbers/szero.png',
+    properties: {
+      zIndex: 50
+    }
+  });
+  bestMod[1] = new StateModifier({
+    opacity: 0,
+    size: [24,28],
+    origin: [0,0],
+    transform: Transform.translate(480-26,408,50)
+  });
+  best[2] = new ImageSurface({
+    content : 'img/numbers/szero.png',
+    properties: {
+      zIndex: 50
+    }
+  });
+  bestMod[2] = new StateModifier({
+    opacity: 0,
+    size: [24,28],
+    origin: [0,0],
+    transform: Transform.translate(480-52,408,50)
+  });
+
+  // ADD
+
+  gameView.add(MedalMod).add(medalRotationModifier).add(Medal);
+  gameView.add(Mod).add(Surf);
+  gameView.add(scoreMod[0]).add(score[0]);
+  gameView.add(scoreMod[1]).add(score[1]);
+  gameView.add(scoreMod[2]).add(score[2]);
+  gameView.add(bestMod[0]).add(best[0]);
+  gameView.add(bestMod[1]).add(best[1]);
+  gameView.add(bestMod[2]).add(best[2]);
+
+  this.show = function(scoreNumber,bestNumber){
+
+    // SCORE
+    score[0].setContent('img/numbers/szero.png');
+    score[1].setContent('img/numbers/szero.png');
+    score[2].setContent('img/numbers/szero.png');
+    var str1 = scoreNumber.toString();
+    for (var i = 0; i < str1.length; i++ ){
+      //console.log('str[' + i + ']=' + str1[i]);
+      switch (str1[i]){
+        case '0':
+          score[str1.length-i-1].setContent('img/numbers/szero.png');
+          break;
+        case '1':
+          score[str1.length-i-1].setContent('img/numbers/sone.png');
+          break;
+        case '2':
+          score[str1.length-i-1].setContent('img/numbers/stwo.png');
+          break;
+        case '3':
+          score[str1.length-i-1].setContent('img/numbers/sthree.png');
+          break;
+        case '4':
+          score[str1.length-i-1].setContent('img/numbers/sfour.png');
+          break;
+        case '5':
+          score[str1.length-i-1].setContent('img/numbers/sfive.png');
+          break;
+        case '6':
+          score[str1.length-i-1].setContent('img/numbers/ssix.png');
+          break;
+        case '7':
+          score[str1.length-i-1].setContent('img/numbers/sseven.png');
+          break;
+        case '8':
+          score[str1.length-i-1].setContent('img/numbers/seight.png');
+          break;
+        case '9':
+          score[str1.length-i-1].setContent('img/numbers/snine.png');
+          break;
       }
-    });
-    var Mod = new StateModifier({
-      opacity: 1,
-      origin: [0.5,0.5],
-      size: [226,116],
-      transform: Transform.translate(320,300,40)
-    });
-
-    gameView.add(Mod).add(Surf);
-
-    this.show = function(){
-      Mod.setOpacity(1);
     }
 
-    this.hide = function(){
-      Mod.setOpacity(0);
+    // BEST
+    best[0].setContent('img/numbers/szero.png');
+    best[1].setContent('img/numbers/szero.png');
+    best[2].setContent('img/numbers/szero.png');
+    var str2 = bestNumber.toString();
+    for (var j = 0; j < str2.length; j++ ){
+      //console.log('str[' + j + ']=' + str2[j]);
+      switch (str2[j]){
+        case '0':
+          best[str2.length-j-1].setContent('img/numbers/szero.png');
+          break;
+        case '1':
+          best[str2.length-j-1].setContent('img/numbers/sone.png');
+          break;
+        case '2':
+          best[str2.length-j-1].setContent('img/numbers/stwo.png');
+          break;
+        case '3':
+          best[str2.length-j-1].setContent('img/numbers/sthree.png');
+          break;
+        case '4':
+          best[str2.length-j-1].setContent('img/numbers/sfour.png');
+          break;
+        case '5':
+          best[str2.length-j-1].setContent('img/numbers/sfive.png');
+          break;
+        case '6':
+          best[str2.length-j-1].setContent('img/numbers/ssix.png');
+          break;
+        case '7':
+          best[str2.length-j-1].setContent('img/numbers/sseven.png');
+          break;
+        case '8':
+          best[str2.length-j-1].setContent('img/numbers/seight.png');
+          break;
+        case '9':
+          best[str2.length-j-1].setContent('img/numbers/snine.png');
+          break;
+      }
     }
+
+
+    // MEDAL
+    var bool1 = true;
+    Medal.setContent('img/platinum.png');
+    if (scoreNumber < 50){
+      Medal.setContent('img/gold.png');
+    }
+    if (scoreNumber < 25){
+      Medal.setContent('img/silver.png');
+    }
+    if (scoreNumber < 10){
+      Medal.setContent('img/bronze.png');
+    }
+    if (scoreNumber < 3){
+      bool1 = false;
+    }
+
+    // SHOW
+    Timer.setTimeout(function(){
+      Mod.setOpacity(1, {duration : 1000});
+      scoreMod[0].setOpacity(1, {duration : 1000});
+      scoreMod[1].setOpacity(1, {duration : 1000});
+      scoreMod[2].setOpacity(1, {duration : 1000});
+      bestMod[0].setOpacity(1, {duration : 1000});
+      bestMod[1].setOpacity(1, {duration : 1000});
+      bestMod[2].setOpacity(1, {duration : 1000});
+      if (bool1){
+        MedalMod.setOpacity(1, {duration : 1000});
+        medalRotation.set(-1);
+        medalRotation.set(0, {duration : 300, curve : Easing.inSine});
+        medalRotation.set(1, {duration : 300, curve : Easing.outSine});
+        medalRotation.set(0, {duration : 300, curve : Easing.inSine});
+        medalRotation.set(-1, {duration : 300, curve : Easing.outSine});
+        medalRotation.set(0, {duration : 300, curve : Easing.inSine});
+        medalRotation.set(1, {duration : 300, curve : Easing.outSine});
+      }
+    }, 2000);
+  }
+
+  this.hide = function(){
+    Mod.setOpacity(0, {duration : 250});
+    scoreMod[0].setOpacity(0, {duration : 250});
+    scoreMod[1].setOpacity(0, {duration : 250});
+    scoreMod[2].setOpacity(0, {duration : 250});
+    bestMod[0].setOpacity(0, {duration : 250});
+    bestMod[1].setOpacity(0, {duration : 250});
+    bestMod[2].setOpacity(0, {duration : 250});
+    MedalMod.setOpacity(0, {duration : 250});
+  }
 }
 
 /////////////
@@ -620,7 +867,7 @@ function newVars(){
 function init(){
   // subs
 
-  // gameView.add(backgroundSurface);
+  gameView.add(backgroundSurface);
   gameView.add(backgroundRightSurfaceModifier).add(backgroundRightSurface);
   gameView.add(backgroundLeftSurfaceModifier).add(backgroundLeftSurface);
   gameView.add(floorSurfaceModifier).add(floorSurface);
@@ -681,7 +928,7 @@ function init(){
     msg.hide();
     myBird.ready();
     msg.showTaptap();
-  }, 1500);
+  }, 3000);
 }
 
 /////////////////////
@@ -706,13 +953,15 @@ function lose(type){
   // Local
   myBird.lose();
 
+  interphase.show(score.getScore(), 666);
+
   Timer.setTimeout(function(){
-    interphase();
+    interphaseFunc();
     myBird.interPhase();
   }, 2500);
 }
 
-function interphase(){
+function interphaseFunc(){
 
 }
 
@@ -753,6 +1002,8 @@ function pressSpace(){
         // Local
         myBird.ready();
         score.reset();
+
+        interphase.hide();
 
         for (var i = 0; i < colSets; i++){
           colTop[i].reset(480);
