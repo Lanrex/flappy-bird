@@ -40,7 +40,7 @@ var
   gravity,
   xVelocity = 0.28,
   gravityForce = [0,0.0027,0],
-  birdFlap = [0 ,-0.92,0],
+  birdFlap = [0 ,-0.97,0],
   myBird,
   bird = [],
   colTop = [],
